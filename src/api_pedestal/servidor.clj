@@ -2,63 +2,46 @@
   (:require [io.pedestal.http :as http]
             [io.pedestal.test :as test]
             [io.pedestal.interceptor :as i]
-            [api-pedestal.database :as database]
-            [api-pedestal.rotas :as rotas]
             [com.stuartsierra.component :as component]))
 
-(defrecord Servidor [data-base rotas]
+(defrecord Servidor [database rotas server test-request]
   component/Lifecycle
 
   (start [this]
-    (defn assoc-store [context]
-      (update context :request assoc :store (:store database)))
+    (println "Starting servidor...")
 
-    (def db-interceptor
-      {:name  :db-interceptor
-       :enter assoc-store})
+    (let [assoc-store (fn [context]
+                        (update context :request assoc :store (:store database)))
 
-    (def service-map-base {::http/routes (:endpoints rotas)
+          db-interceptor {:name  :db-interceptor
+                          :enter assoc-store}
+
+          service-map (-> {::http/routes (:endpoints rotas)
                            ::http/port   9999
                            ::http/type   :jetty
-                           :http/join?   false})
+                           :http/join?   false}
+                          http/default-interceptors
+                          (update ::http/interceptors conj
+                                  http/json-body)
+                          (update ::http/interceptors conj (i/interceptor db-interceptor)))
 
-    (def service-map (-> service-map-base
-                         (http/default-interceptors)
-                         (update ::http/interceptor conj (i/interceptor db-interceptor))))
+          server-instance (http/create-server service-map)]
 
-    (defonce server (atom nil))
+      (http/start server-instance)
 
-    (defn start-server []
-      (reset! server (http/start (http/create-server service-map))))
-
-    (defn test-request [verb url]
-      (test/response-for (::http/service-fn @server) verb url))
-
-    (defn stop-server []
-      (http/stop @server))
-
-    (defn restart-server []
-      (stop-server)
-      (start-server))
-
-    (defn start []
-      (try
-        (start-server)
-        (catch Exception e (prn "Erro ao executar start" (.getMessage e))))
-
-      (try
-        (restart-server)
-        (catch Exception e (prn "Erro ao executar restart" (.getMessage e)))))
-
-    (start)
-    (assoc this :test-request test-request))
+      (assoc this
+        :server server-instance
+        :test-request (fn [verb url]
+                        (test/response-for (::http/service-fn server-instance) verb url)))))
 
   (stop [this]
-    (assoc this :test-request nil)))
+    (println "Stopping servidor...")
+    (when server
+      (http/stop server))
+    (assoc this :server nil :test-request nil)))
 
 (defn new-servidor []
   (map->Servidor {}))
-
 
 
 

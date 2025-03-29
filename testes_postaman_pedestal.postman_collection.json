@@ -1,0 +1,127 @@
+{
+	"info": {
+		"_postman_id": "7c539b8f-c429-4693-808b-9ecac0897a31",
+		"name": "testes_postaman_pedestal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43585824"
+	},
+	"item": [
+		{
+			"name": "Criar Tarefa (POST /tarefa)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"mensagem\": \"Tarefa registrada com sucesso!\",\n  \"tarefa\": {\n    \"id\": \"uuid-que-foi-gerado\",\n    \"nome\": \"Tarefa Exemplo\",\n    \"status\": \"Em andamento\"\n  }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/tarefa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"tarefa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Tarefas (GET /tarefa)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"id\": \"uuid-da-tarefa\",\n    \"nome\": \"Tarefa Exemplo\",\n    \"status\": \"Em andamento\"\n  }\n]\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/tarefa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"tarefa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remover Tarefa (DELETE /tarefa/:id)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"mensagem\": \"Removida com sucesso!\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/tarefa/4196dbd9-ad26-4015-a6ce-52f0667a4eac",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"tarefa",
+						"4196dbd9-ad26-4015-a6ce-52f0667a4eac"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Tarefa (PATCH /tarefa/:id)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Tarefa Atualizada\",\n  \"status\": \"Finalizada\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/tarefa/{id}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"tarefa",
+						"{id}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
