@@ -9,7 +9,8 @@
                  [org.slf4j/slf4j-api "2.0.0-alpha1"]
                  [org.slf4j/slf4j-log4j12 "2.0.0-alpha1"]
                  [log4j/log4j "1.2.17"]
-                 [org.clojure/tools.analyzer "1.2.0"]]
+                 [org.clojure/tools.analyzer "1.2.0"]
+                 [com.stuartsierra/component "1.1.0"]]
 
   :repl-options {:init-ns api-pedestal.core
                  repl-options {:timeout 60000}}  ; Aumenta o timeout para 60 segundos}
